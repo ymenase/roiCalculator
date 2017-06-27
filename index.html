@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html ng-app="roiCalculator">
+
+  <head>
+    <style>
+@import url('https://fonts.googleapis.com/css?family=Droid+Sans');
+</style>
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+      <!-- Optional theme -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+      <!-- Latest compiled and minified JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+      <meta name="description" content="coding challenge">
+      <meta name="viewport" content="initial-scale=1">
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
+      <title>Calculator</title>
+  </head>
+
+  <body ng-app>
+  <!--   create controller -->
+      <div class="container" id="roiCalculator" ng-controller="CalculatorController" ng-init="calculate()">
+<!--     use bootstrap colums and rows to keep things evenly spaced and legible -->
+          <section class="classRevenue">
+              <h3>Revenue</h3>
+              <div class="row">
+                  <div class="col-xs-3"><b>Name</b></div>
+                  <div class="col-xs-3"><b>One-Time Payment</b></div>
+                  <div class="col-xs-3"><b>Monthly Payment</b></div>
+                  <div class="col-xs-3"><b>Action</b></div>
+              </div>
+              <div class="row" ng-repeat="item in revenueItems">
+                  <div class="col-xs-3">{{item.name}}</div>
+                  <div class="col-xs-3">${{item.oneTimePmt}}</div>
+                  <div class="col-xs-3">${{item.monthlyPmt}}</div>
+                  <div class="col-xs-3">
+                      <button ng-click="removeRevenueItem(item); calculate()">Delete</button>
+                  </div>
+              </div>
+          </section>
+
+          <!-- Create revenue object and add to list -->
+
+          <section>
+              <div class="row">
+                  <form ng-submit="addRevenueItem(revenueItems.name, revenueItems.oneTimePmt, revenueItems.monthlyPmt); calculate()">
+                      <div class="col-xs-3">
+                          <input type="text" ng-model="revenueItems.name" /> </br>
+                      </div>
+                      <div class="col-xs-3">
+                          <input type="text" ng-model="revenueItems.oneTimePmt" />
+                      </div>
+                      <div class="col-xs-3">
+                          <input type="text" ng-model="revenueItems.monthlyPmt" />
+                      </div>
+                      <div class="col-xs-3">
+                          <input type="submit" value="Add Revenue Item" />
+                      </div>
+                  </form>
+              </div>
+          </section>
+
+          <!-- Expense Objects -->
+
+          <section class="classExpense">
+              <h3>Expenses</h3>
+              <div class="row">
+                  <div class="col-xs-3"><b>Name</b></div>
+                  <div class="col-xs-3"><b>One-Time Payment</b></div>
+                  <div class="col-xs-3"><b>Monthly Payment</b></div>
+                  <div class="col-xs-3"><b>Action</b></div>
+              </div>
+              <div class="row" ng-repeat="item in expenseItems">
+                  <div class="col-xs-3">{{item.name}}</div>
+                  <div class="col-xs-3">${{item.oneTimePmt}}</div>
+                  <div class="col-xs-3">${{item.monthlyPmt}}</div>
+                  <div class="col-xs-3">
+                      <button ng-click="removeExpenseItem(item); calculate()">Delete</button>
+                  </div>
+              </div>
+          </section>
+
+          <!-- Create expense object and add to list -->
+
+          <section>
+              <form ng-submit="addExpenseItem(expenseItems.name, expenseItems.oneTimePmt, expenseItems.monthlyPmt); calculate()">
+                  <div class="row">
+                      <div class="col-xs-3">
+                          <input type="text" ng-model="expenseItems.name" />
+                      </div>
+
+                      <div class="col-xs-3">
+                          <input type="text" ng-model="expenseItems.oneTimePmt" />
+                      </div>
+
+                      <div class="col-xs-3">
+                          <input type="text" ng-model="expenseItems.monthlyPmt" />
+                      </div>
+
+                      <div class="col-xs-3">
+                          <input type="submit" value="Add Expense Item" />
+                      </div>
+                  </div>
+              </form>
+          </section>
+
+   <!-- total calculations below -->
+          <section>
+              <h3>Calculations</h3>
+
+              <div class="row">
+                  <div class="col-xs-3"></div>
+                  <div class="col-xs-3">One-Time</div>
+                  <div class="col-xs-3">Monthly</div>
+                  <div class="col-xs-3">Total</div>
+              </div>
+
+              <div class="row">
+                  <div class="col-xs-3">Revenue</div>
+                  <div class="col-xs-3">${{oneTimeRevenue}}</div>
+                  <div class="col-xs-3">${{monthlyRevenue}}</div>
+                  <div class="col-xs-3">${{totalRevenue}}</div>
+              </div>
+
+              <div class="row">
+                  <div class="col-xs-3">Expense</div>
+                  <div class="col-xs-3">${{oneTimeExpense}}</div>
+                  <div class="col-xs-3">${{monthlyExpense}}</div>
+                  <div class="col-xs-3">${{totalExpense}}</div>
+              </div>
+
+              <div class="row">
+                  <div class="col-xs-6">
+                      Contribution Profit
+                  </div>
+                  <div class="col-xs-3">${{monthlyContributionProfit}}</div>
+                  <div class="col-xs-3">${{totalContributionProfit}}</div>
+              </div>
+
+              <div class="row">
+                  <div class="col-xs-9">
+                      Contribution Margin
+                  </div>
+                  <div class="col-xs-3">{{contributionMargin}}%</div>
+              </div>
+
+              <div class="row">
+                  <div class="col-xs-9">
+                      Capital ROI
+                  </div>
+                  <div class="col-xs-3">{{capitalROI}}</div>
+              </div>
+          </section>
+
+      </div>
+  </body>
+</html>
